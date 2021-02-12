@@ -1,48 +1,6 @@
 import * as React from "react";
-const text = `Lorem, ipsum`;
-
-const Status = {
-  NOT_PASSED: `not-passed`,
-  PASSED: `passed`,
-  NEXT: `next`,
-  WRONG: `wrong`,
-};
-
-const arrayToObject = (arr) => {
-  return arr.split(``).map((it, i) => {
-    let obj = Object.assign({}, {
-      id: i,
-      symbol: it,
-      status: `not-passed`
-    });
-    return obj;
-  });
-};
-
-const changeSymbolStatus = (arr, item, currentStatus) => {
-  if (currentStatus === Status.PASSED) {
-    let changedArr = arr.slice().map((it) => {
-      if (it.id === item.id) {
-        return Object.assign(it, {status: currentStatus});
-      } else if (it.id === item.id + 1) {
-        return Object.assign(it, {status: Status.NEXT});
-      } else {
-        return it;
-      }
-    });
-    return changedArr;
-  }
-  let changedArr = arr.slice().map((it) => {
-    if (it.id === item.id) {
-      return Object.assign(it, {status: currentStatus});
-    } else {
-      return it;
-    }
-  });
-  return changedArr;
-
-
-};
+import {Status, text} from '../const.js';
+import {arrayToObject, calculateAccuracy, changeSymbolStatus} from '../utils.js';
 
 class App extends React.PureComponent {
   constructor(props) {
@@ -51,39 +9,84 @@ class App extends React.PureComponent {
     this.state = {
       score: 0,
       mistakes: 0,
+      accurancy: 100,
       textArray: arrayToObject(text),
       currentKey: ``,
       currentLetter: ``,
+      time: 0,
     };
 
+    this.interval = null;
+
+    this._successInter = this._successInter.bind(this);
+    this._unsuccessInter = this._unsuccessInter.bind(this);
+    this._resetScore = this._resetScore.bind(this);
+    this._startTimer = this._startTimer.bind(this);
+    this._stopTimer = this._stopTimer.bind(this);
+    this._addOneSecond = this._addOneSecond.bind(this);
     this._keyPressHandler = this._keyPressHandler.bind(this);
+    this._startButtonClickHandler = this._startButtonClickHandler.bind(this);
+  }
+
+  _addOneSecond() {
+    this.setState((state) => {
+      return {
+        time: state.time + 1};
+    });
+  }
+
+  _startTimer() {
+    this.interval = setInterval(this._addOneSecond, 1000);
+  }
+
+  _stopTimer() {
+    clearInterval(this.interval);
+  }
+
+  _successInter() {
+    this.setState((state) => {
+      return {
+        textArray: changeSymbolStatus(state.textArray, state.currentLetter, Status.PASSED),
+        score: state.score + 1};
+    });
+  }
+
+  _resetScore() {
+    this.setState({
+      score: 0,
+      textArray: arrayToObject(text),
+    });
+  }
+
+  _unsuccessInter() {
+    this.setState((state) => {
+      return {
+        textArray: changeSymbolStatus(state.textArray, state.currentLetter, Status.WRONG),
+        mistakes: state.mistakes + 1,
+      };
+    });
+  }
+
+  _startButtonClickHandler() {
+    this._startTimer();
   }
 
   _keyPressHandler(evt) {
 
     this.setState({currentKey: String.fromCharCode(evt.keyCode)});
     this.setState({currentLetter: this.state.textArray[this.state.score]});
+    this.setState({accurancy: calculateAccuracy(this.state.score, this.state.mistakes)});
+
 
     if (this.state.currentKey === this.state.currentLetter.symbol) {
-      this.setState((state) => {
-        return {
-          textArray: changeSymbolStatus(state.textArray, state.currentLetter, Status.PASSED),
-          score: state.score + 1};
-      });
+      this._successInter();
 
       if (this.state.score >= this.state.textArray.length) {
-        this.setState({
-          score: 0,
-          textArray: arrayToObject(text),
-        });
+        this._resetScore();
+        this._stopTimer();
       }
     } else {
-      this.setState((state) => {
-        return {
-          textArray: changeSymbolStatus(state.textArray, state.currentLetter, Status.WRONG),
-          mistakes: state.mistakes + 1,
-        };
-      });
+      this._unsuccessInter();
     }
   }
 
@@ -100,8 +103,15 @@ class App extends React.PureComponent {
         </p>
 
         <p>
-          Ошибок: {this.state.mistakes}
+          Точность: {this.state.accurancy}%
         </p>
+
+        <p>
+          Скорость: {this.state.time} sec.
+        </p>
+
+        <button onClick={this._startButtonClickHandler}>Начать</button>
+
       </div>
     );
   }
