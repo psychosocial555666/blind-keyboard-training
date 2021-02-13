@@ -49,4 +49,12 @@ const calculateAccuracy = (scores, mistakes) => {
   return result;
 };
 
-export {changeSymbolStatus, arrayToObject, calculateAccuracy};
+const calculateSpeed = (scores, time) => {
+  if (scores && time) {
+    let result = (scores / time) * 60;
+    return Math.round(result);
+  }
+  return 0;
+};
+
+export {changeSymbolStatus, arrayToObject, calculateAccuracy, calculateSpeed};

@@ -1,4 +1,3 @@
-const text = `Bacon ipsum dolor amet pork belly ham hock sirloin corned beef bacon turducken shoulder biltong capicola chicken.`;
 
 const Status = {
   NOT_PASSED: `not-passed`,
@@ -7,4 +6,6 @@ const Status = {
   WRONG: `wrong`,
 };
 
-export {text, Status};
+const URL = `https://baconipsum.com/api/?type=all-meat&sentences=3&start-with-lorem=1&format=text`;
+
+export {Status, URL};

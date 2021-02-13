@@ -1,29 +1,128 @@
 body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 100%;
   height: 100vh;
+  overflow: hidden;
+  box-sizing: border-box;
   font-family: Helvetica, sans-serif;
   font-size: 24px;
   letter-spacing: 1px;
+  background-color: #212529;
+  color: aliceblue;
+}
+
+.wrapper {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.app-container {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.navbar {
+  margin-bottom: 50px;
+}
+
+.bi {
+  margin-right: 30px;
+}
+
+.btn {
+  width: 40%;
+}
+
+.main-content {
+  width: 100%;
+  height: 60%;
+  padding: 50px 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: stretch;
+}
+
+.main-content__text {
+  background-color: #cfcfcf;
+  color: #111111;
+  border-radius: 5px;
+  padding: 40px;
+}
+
+.statistics {
+  flex-direction: column;
+  padding: 40px 30px;
+}
+
+.statistics__item {
+  text-align: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #666;
+}
+
+.progress {
+  margin-bottom: 16px;
 }
 
 .not-passed {
-  opacity: 0.7;
+  opacity: 0.9;
 }
 
 .passed {
   opacity: 1;
-  color: lightgreen;
+  color: rgb(37, 199, 37);
 }
 
 .next {
-  background-color: green;
+  background-color: rgb(12, 94, 12);
   border-radius: 3px;
 }
 
 .wrong {
-  background-color: red;
+  background-color: rgb(199, 23, 23);
   border-radius: 3px;
+}
+
+.welcome-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 50px 300px;
+}
+
+.welcome-screen__title {
+  text-align: center;
+}
+
+.welcome-screen__text {
+  font-size: 18px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.welcome-screen__prompt {
+  margin-bottom: 30px;
+}
+
+.welcome-screen__start {
+  min-width: 300px;
+  font-size: 30px;
+}
+
+.result-screen__headers {
+  padding: 30px 0;
+  border-bottom: 3px solid #666666;
+}
+
+.result-screen__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.result-screen__item {
+  padding: 20px 0;
+  border-bottom: 1px solid #333;
 }
