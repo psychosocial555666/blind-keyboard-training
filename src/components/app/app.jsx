@@ -1,10 +1,11 @@
 import * as React from "react";
-import {Status, URL} from '../const.js';
+import {Status, URL, ScreenType} from '../const.js';
 import {arrayToObject, calculateAccuracy, calculateSpeed, changeSymbolStatus} from '../utils.js';
 import API from "../api.js";
 import MainScreen from "../main/main.jsx";
-// import WelcomeScreen from "../welcome/welcome.jsx";
-// import ResultScreen from "../result/result.jsx";
+import WelcomeScreen from "../welcome/welcome.jsx";
+import ResultScreen from "../result/result.jsx";
+import TotalScreen from "../total/total.jsx";
 
 class App extends React.PureComponent {
   constructor(props) {
@@ -19,10 +20,15 @@ class App extends React.PureComponent {
       currentKey: ``,
       currentLetter: ``,
       time: 0,
+      screen: ScreenType.WELCOME,
+      results: [],
     };
 
     this.interval = null;
+    this.storage = null;
 
+    this._renderScreen = this._renderScreen.bind(this);
+    this._switchScreen = this._switchScreen.bind(this);
     this._successInter = this._successInter.bind(this);
     this._unsuccessInter = this._unsuccessInter.bind(this);
     this._resetScore = this._resetScore.bind(this);
@@ -30,8 +36,47 @@ class App extends React.PureComponent {
     this._stopTimer = this._stopTimer.bind(this);
     this._getText = this._getText.bind(this);
     this._addOneSecond = this._addOneSecond.bind(this);
+    this._writeUserResults = this._writeUserResults.bind(this);
     this._keyPressHandler = this._keyPressHandler.bind(this);
     this._startButtonClickHandler = this._startButtonClickHandler.bind(this);
+    this._resultButtonClickHandler = this._resultButtonClickHandler.bind(this);
+    this._userFormSubmitHandler = this._userFormSubmitHandler.bind(this);
+
+  }
+
+  _renderScreen(screen) {
+    switch (screen) {
+      case ScreenType.WELCOME:
+        return (
+          <WelcomeScreen
+            onStartButtonClick={this._startButtonClickHandler}
+          />
+        );
+      case ScreenType.MAIN:
+        return (
+          <MainScreen
+            textArray={this.state.textArray}
+            accurancy={this.state.accurancy}
+            speed={this.state.speed}
+            onKeyPress={this._keyPressHandler}/>
+        );
+      case ScreenType.RESULT:
+        return (
+          <ResultScreen results={this.state.results}/>
+        );
+      case ScreenType.TOTAL:
+        return (
+          <TotalScreen
+            accurancy={this.state.accurancy}
+            speed={this.state.speed}
+            onUserFormSubmit={this._userFormSubmitHandler}
+          />
+        );
+      default:
+        break;
+    }
+
+    return null;
   }
 
   _addOneSecond() {
@@ -62,7 +107,14 @@ class App extends React.PureComponent {
   _resetScore() {
     this.setState({
       score: 0,
+      mistakes: 0,
+      accurancy: 100,
+      speed: 0,
+      currentKey: ``,
+      currentLetter: ``,
+      time: 0,
     });
+    this._getText();
   }
 
   _unsuccessInter() {
@@ -74,11 +126,51 @@ class App extends React.PureComponent {
     });
   }
 
-  _startButtonClickHandler() {
+  _switchScreen(currentScreen) {
+    this.setState({
+      screen: currentScreen,
+    });
+  }
+
+  _writeUserResults(username, speed, accurancy) {
+    let currentResult = {
+      name: username,
+      userSpeed: speed,
+      userAccurancy: accurancy
+    };
+    this.setState((state) => {
+      return {
+        results: state.results.concat(currentResult),
+      };
+    });
+  }
+
+  _userFormSubmitHandler(evt) {
+    evt.preventDefault();
+    let username = document.querySelector(`.total-screen__username`).value;
+    this._writeUserResults(username, this.state.speed, this.state.accurancy);
+    this._resetScore();
+    this._switchScreen(ScreenType.MAIN);
     this._startTimer();
   }
 
+  _startButtonClickHandler() {
+    this._switchScreen(ScreenType.MAIN);
+    this._startTimer();
+  }
+
+  _resultButtonClickHandler() {
+    this._stopTimer();
+    this._resetScore();
+    this._switchScreen(ScreenType.RESULT);
+  }
+
   _keyPressHandler(evt) {
+    if (String.fromCharCode(evt.keyCode).match(/([а-яА-Я]+)/)) {
+      // eslint-disable-next-line no-alert
+      alert(`Смените раскладку клавиатуры`);
+      return;
+    }
 
     this.setState({currentKey: String.fromCharCode(evt.keyCode)});
     this.setState({currentLetter: this.state.textArray[this.state.score]});
@@ -89,8 +181,8 @@ class App extends React.PureComponent {
       this._successInter();
 
       if (this.state.score >= this.state.textArray.length) {
-        this._resetScore();
         this._stopTimer();
+        this._switchScreen(ScreenType.TOTAL);
       }
     } else {
       this._unsuccessInter();
@@ -106,7 +198,6 @@ class App extends React.PureComponent {
   }
 
   componentDidMount() {
-    document.addEventListener(`keypress`, this._keyPressHandler);
     this._getText();
   }
 
@@ -123,22 +214,15 @@ class App extends React.PureComponent {
               </svg>
               BLIND_KEYBOARD_TRAINING</a>
             <form className="d-flex justify-content-end col-3">
-              <button className="btn btn-outline-success me-2" type="button">Тренажер</button>
-              <button className="btn btn-sm btn-outline-secondary" type="button">Результаты</button>
+              <button onClick={this._startButtonClickHandler} onMouseUp={(evt) => evt.target.blur()} className="btn btn-outline-success me-2" type="button">Тренажер</button>
+              <button onClick={this._resultButtonClickHandler} onMouseUp={(evt) =>evt.target.blur()} className="btn btn-sm btn-outline-secondary" type="button">Результаты</button>
             </form>
           </div>
         </nav>
-        <MainScreen
-          textArray={this.state.textArray}
-          accurancy={this.state.accurancy}
-          speed={this.state.speed}/>
-        {/* <WelcomeScreen />
-        <ResultScreen /> */}
+        {this._renderScreen(this.state.screen)}
       </div>
     );
   }
 }
 
-
 export default App;
-

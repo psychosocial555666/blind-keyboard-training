@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 
-const ResultScreen = () => {
-
+const ResultScreen = (props) => {
+  const {results} = props;
   return (
     <div className="result-screen container">
       <h2 className="result-screen__title">Лучшие результаты:</h2>
@@ -11,13 +11,16 @@ const ResultScreen = () => {
         <div className="col-3">Скорость</div>
         <div className="col-3">Точность</div>
       </div>
-      <ul className="result-screen__list">
-        <li className="result-screen__item row">
-          <div className="col-6">Александр</div>
-          <div className="col-3">120</div>
-          <div className="col-3">90</div>
-        </li>
-      </ul>
+      {results.map((it) => {
+        return <ul key={it.name + it.userSpeed} className="result-screen__list">
+          <li className="result-screen__item row">
+            <div className="col-6">{it.name}</div>
+            <div className="col-3">{it.userSpeed} зн./мин.</div>
+            <div className="col-3">{it.userAccurancy}%</div>
+          </li>
+        </ul>;
+      })}
+
     </div>
   );
 };

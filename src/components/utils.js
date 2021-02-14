@@ -1,4 +1,4 @@
-import {Status} from './const.js';
+import {Status, MAX_PERCENT, SECONDS_IN_MINUTE} from './const.js';
 
 const arrayToObject = (arr) => {
   return arr.split(``).map((it, i) => {
@@ -44,14 +44,14 @@ const changeSymbolStatus = (arr, item, currentStatus) => {
 
 const calculateAccuracy = (scores, mistakes) => {
   let total = scores + mistakes;
-  let mistakesPercent = mistakes !== 0 ? (mistakes / total) * 100 : 0;
-  let result = 100 - Math.round(mistakesPercent);
+  let mistakesPercent = mistakes !== 0 ? (mistakes / total) * MAX_PERCENT : 0;
+  let result = MAX_PERCENT - Math.round(mistakesPercent);
   return result;
 };
 
 const calculateSpeed = (scores, time) => {
   if (scores && time) {
-    let result = (scores / time) * 60;
+    let result = (scores / time) * SECONDS_IN_MINUTE;
     return Math.round(result);
   }
   return 0;
