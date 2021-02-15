@@ -57,4 +57,16 @@ const calculateSpeed = (scores, time) => {
   return 0;
 };
 
-export {changeSymbolStatus, arrayToObject, calculateAccuracy, calculateSpeed};
+const showServiceMessage = (serviceMessage) => {
+  let node = document.createElement(`div`);
+  node.style = `opacity: 0.8; padding: 20px 30px; bottom: 10px; left: 20px; border-radius: 8px; z-index: 100; margin: 0 auto; text-align: center; background-color: #b93f1ac0;`;
+  node.style.position = `absolute`;
+  node.style.fontSize = `20px`;
+
+  node.textContent = serviceMessage;
+  document.body.insertAdjacentElement(`afterbegin`, node);
+
+  setTimeout(() => node.remove(), 3000);
+};
+
+export {changeSymbolStatus, arrayToObject, calculateAccuracy, calculateSpeed, showServiceMessage};

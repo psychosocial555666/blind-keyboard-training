@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import React from "react";
+import PropTypes from "prop-types";
 
 const ResultScreen = (props) => {
   const {results} = props;
@@ -23,6 +23,16 @@ const ResultScreen = (props) => {
 
     </div>
   );
+};
+
+ResultScreen.propTypes = {
+  results: PropTypes.arrayOf(
+      {
+        name: PropTypes.string,
+        userSpeed: PropTypes.number,
+        userAccurancy: PropTypes.number,
+      }
+  ).isRequired,
 };
 
 export default ResultScreen;

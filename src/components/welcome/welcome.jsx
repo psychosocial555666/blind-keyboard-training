@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import React from "react";
+import PropTypes from "prop-types";
 
 const WelcomeScreen = (props) => {
   const {onStartButtonClick} = props;
@@ -16,6 +16,10 @@ const WelcomeScreen = (props) => {
       <button onClick={onStartButtonClick} type="button" className="welcome-screen__start btn btn-outline-light">Начать</button>
     </div>
   );
+};
+
+WelcomeScreen.propTypes = {
+  onStartButtonClick: PropTypes.func.isRequired,
 };
 
 export default WelcomeScreen;

@@ -1,7 +1,7 @@
 import * as React from "react";
-import {Status, URL, ScreenType} from '../const.js';
-import {arrayToObject, calculateAccuracy, calculateSpeed, changeSymbolStatus} from '../utils.js';
-import API from "../api.js";
+import {Status, URL, ScreenType, WARNING_MESSAGE} from '../../services/const.js';
+import {arrayToObject, calculateAccuracy, calculateSpeed, changeSymbolStatus, showServiceMessage} from '../../services/utils.js';
+import API from "../../services/api.js";
 import MainScreen from "../main/main.jsx";
 import WelcomeScreen from "../welcome/welcome.jsx";
 import ResultScreen from "../result/result.jsx";
@@ -82,7 +82,8 @@ class App extends React.PureComponent {
   _addOneSecond() {
     this.setState((state) => {
       return {
-        time: state.time + 1
+        time: state.time + 1,
+        speed: calculateSpeed(state.score, state.time)
       };
     });
   }
@@ -167,15 +168,13 @@ class App extends React.PureComponent {
 
   _keyPressHandler(evt) {
     if (String.fromCharCode(evt.keyCode).match(/([а-яА-Я]+)/)) {
-      // eslint-disable-next-line no-alert
-      alert(`Смените раскладку клавиатуры`);
+      showServiceMessage(WARNING_MESSAGE);
       return;
     }
 
     this.setState({currentKey: String.fromCharCode(evt.keyCode)});
     this.setState({currentLetter: this.state.textArray[this.state.score]});
     this.setState({accurancy: calculateAccuracy(this.state.score, this.state.mistakes)});
-    this.setState({speed: calculateSpeed(this.state.score, this.state.time)});
 
     if (this.state.currentKey === this.state.currentLetter.symbol) {
       this._successInter();

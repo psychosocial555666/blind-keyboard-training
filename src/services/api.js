@@ -1,3 +1,6 @@
+import {ERROR_MESSAGE} from "./const";
+import {showServiceMessage} from "./utils";
+
 const API = class {
   constructor(url, params) {
     this._url = url;
@@ -8,7 +11,7 @@ const API = class {
     if (response.status >= 200 && response.status < 300) {
       return response;
     }
-    // реализация сообщения для пользователя
+    showServiceMessage(ERROR_MESSAGE + response.status + response.statusText);
     throw new Error(`${response.status}: ${response.statusText}`);
   }
 
@@ -26,7 +29,7 @@ const API = class {
     return fetch(`${url}`, params)
       .then(this.checkStatus)
       .catch((err) => {
-        // реализация сообщения для пользователя
+        showServiceMessage(ERROR_MESSAGE + err);
         throw err;
       });
   }

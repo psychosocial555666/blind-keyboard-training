@@ -5,7 +5,7 @@
   "description": "Проект Тренажер слепой печати",
   "scripts": {
     "build": "webpack --mode production",
-    "eslint": "npm run eslint.js && npm run eslint.ts",
+    "eslint": "npm run eslint.js",
     "eslint.js": "eslint --ext .jsx --ext .js src/",
     "eslint.ts": "eslint --config .eslintrc-ts.yml --ext .tsx src/",
     "start": "webpack-dev-server",

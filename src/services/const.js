@@ -15,6 +15,10 @@ const ScreenType = {
   TOTAL: `total`,
 };
 
+const ERROR_MESSAGE = `При загрузке произошла ошибка:`;
+
+const WARNING_MESSAGE = `Смените раскладку клавиатуры`;
+
 const URL = `https://baconipsum.com/api/?type=all-meat&sentences=1&&format=text`;
 
-export {Status, URL, ScreenType, MAX_PERCENT, SECONDS_IN_MINUTE};
+export {Status, URL, ScreenType, MAX_PERCENT, SECONDS_IN_MINUTE, ERROR_MESSAGE, WARNING_MESSAGE};

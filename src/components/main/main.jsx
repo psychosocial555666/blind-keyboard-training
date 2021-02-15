@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import React from "react";
+import PropTypes from "prop-types";
 
 class MainScreen extends React.PureComponent {
   constructor(props) {
@@ -67,5 +67,19 @@ class MainScreen extends React.PureComponent {
     );
   }
 }
+
+MainScreen.propTypes = {
+  textArray: PropTypes.arrayOf(
+      {
+        id: PropTypes.number,
+        symbol: PropTypes.string,
+        status: PropTypes.string,
+      }
+  ).isRequired,
+  onKeyPress: PropTypes.func.isRequired,
+  accurancy: PropTypes.number,
+  speed: PropTypes.number,
+};
+
 
 export default MainScreen;

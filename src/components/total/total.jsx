@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import React from "react";
+import PropTypes from "prop-types";
 
 const TotalScreen = (props) => {
   const {accurancy, speed, onUserFormSubmit} = props;
@@ -56,6 +56,12 @@ const TotalScreen = (props) => {
       </form>
     </div>
   );
+};
+
+TotalScreen.propTypes = {
+  onUserFormSubmit: PropTypes.func.isRequired,
+  accurancy: PropTypes.number,
+  speed: PropTypes.number,
 };
 
 export default TotalScreen;
