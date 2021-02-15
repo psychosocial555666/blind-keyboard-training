@@ -69,13 +69,7 @@ class MainScreen extends React.PureComponent {
 }
 
 MainScreen.propTypes = {
-  textArray: PropTypes.arrayOf(
-      {
-        id: PropTypes.number,
-        symbol: PropTypes.string,
-        status: PropTypes.string,
-      }
-  ).isRequired,
+  textArray: PropTypes.array.isRequired,
   onKeyPress: PropTypes.func.isRequired,
   accurancy: PropTypes.number,
   speed: PropTypes.number,
